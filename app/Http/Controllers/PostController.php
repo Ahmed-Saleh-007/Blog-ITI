@@ -10,7 +10,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = Post::paginate(10);
+        $posts = Post::withTrashed()->paginate(10);
         return view('posts.index', compact('posts'));
     }
 
@@ -45,8 +45,14 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
-        $post->delete();
+        $post->delete();    //for force delete "hard or permenant delete" $post->forceDelete();
 		return redirect()->route('posts.index');
+    }
+
+    public function restore($post)
+    {
+        Post::onlyTrashed()->find($post)->restore();
+        return redirect()->route('posts.index');
     }
 
 }

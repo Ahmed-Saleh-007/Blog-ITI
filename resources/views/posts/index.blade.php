@@ -25,7 +25,14 @@
         <td>
           <x-button href="{{ route('posts.show', ['post' => $post->id]) }}" class="btn btn-success" title="View" />
           <x-button href="{{ route('posts.edit', ['post' => $post->id]) }}" class="btn btn-secondary" title="Edit" />
-          <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#del_post_{{$post->id}}" >Delete</button>
+          @if ($post->trashed())
+            <form action="{{ route('posts.restore', ['post' => $post['id']]) }}" method="post" class="d-inline-block">
+              @csrf
+              <input type="submit" class="btn btn-warning" value="Restore"/>
+            </form>
+          @else
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#del_post_{{$post->id}}" >Delete</button>
+          @endif
         </td>
       </tr>
       <div id="del_post_{{$post->id}}" class="modal fade" role="dialog">
@@ -55,6 +62,5 @@
 </table>
 
 {{$posts->links("pagination::bootstrap-4")}}
-
 
 @endsection

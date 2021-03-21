@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -30,6 +31,9 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
+        Schema::table('posts', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
         Schema::dropIfExists('posts');
     }
 }
