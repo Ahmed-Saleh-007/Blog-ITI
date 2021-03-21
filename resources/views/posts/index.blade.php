@@ -92,16 +92,7 @@
             type: 'get',
             data: {post: $(this).data('ajax')},
             success: function (data) {
-              $('#ajax_view_content').html(`
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title">Title:</h5>
-                  <p class="card-text">${data.title}</p>
-                  <h5 class="card-title">Description:</h5>
-                  <p class="card-text">${data.description}</p>
-                </div>
-              </div>
-              `);
+              $('#ajax_view_content').html(data);
             }
         });
       });

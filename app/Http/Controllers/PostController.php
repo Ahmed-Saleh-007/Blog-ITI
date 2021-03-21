@@ -21,7 +21,8 @@ class PostController extends Controller
 
     public function ajaxShow(Request $request)
     {
-        return Post::withTrashed()->where("id", $request->post)->first();
+        $post = Post::withTrashed()->where("id", $request->post)->first();
+        return view('posts.ajax_show', compact('post'));
     }
 
     public function create()
