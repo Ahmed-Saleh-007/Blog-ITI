@@ -19,6 +19,11 @@ class PostController extends Controller
         return view('posts.show', compact('post'));
     }
 
+    public function ajaxShow(Request $request)
+    {
+        return Post::withTrashed()->where("id", $request->post)->first();
+    }
+
     public function create()
     {
         $users = User::all();
