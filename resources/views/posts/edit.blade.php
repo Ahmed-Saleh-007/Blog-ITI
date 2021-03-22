@@ -3,7 +3,18 @@
 @section('title')edit Page @endsection
 
 @section('content')
-<form method="POST" action="{{route('posts.update', ['post' => $post['id']])}}">
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<form method="POST" action="{{route('posts.update', ['post' => $post['id']])}}" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <div class="form-group">
@@ -14,6 +25,13 @@
       <label for="description">Description</label>
       <textarea class="form-control" name="description" id="description">{{$post['description']}}</textarea>
     </div>
+    <div class="form-group">
+      <label for="image">Image</label>
+      <input type="file" name="image" class="form-control" id="image">
+    </div>
+    @if(!empty($post->image))
+    <div style="background-image: url({{ Storage::url($post->image) }}); background-size:cover; height:200px; width:200px;"></div>
+    @endif
     <div class="form-group">
       <label  for="post_creator">Post Creator</label>
       <select name="user_id" class="form-control" id="post_creator">

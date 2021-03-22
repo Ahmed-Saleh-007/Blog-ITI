@@ -17,6 +17,9 @@
       <p class="card-text">{{ $post->user->email }}</p>
       <h5 class="card-title">Created at:</h5>
       <p class="card-text">{{ $post->human_readable_date($post->created_at)}}</p>
+      @if(!empty($post->image))
+      <div style="background-image: url({{ Storage::url($post->image) }}); background-size:cover; height:200px; width:200px;"></div>
+      @endif
     </div>
 </div>
 @endsection

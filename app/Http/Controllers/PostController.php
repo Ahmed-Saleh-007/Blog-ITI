@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\PostRequest;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -31,9 +33,13 @@ class PostController extends Controller
         return view('posts.create', compact('users'));
     }
 
-    public function store(Request $request)
+    public function store(PostRequest $request)
     {
-        Post::create($request->all());
+        $data = $request->all();
+        if($request->image){
+            $data['image'] = savePhoto('image', 'posts', $request);
+        }
+        Post::create($data);
         return redirect()->route('posts.index');
     }
 
@@ -43,9 +49,15 @@ class PostController extends Controller
         return view('posts.edit', compact('post', 'users'));
     }
 
-    public function update(Post $post, Request $request)
+    public function update(PostRequest $request, Post $post)
     {
-        $post->update($request->all());
+        $data = $request->all();
+        if($request->file('image'))
+        {
+            $data['image']  = savePhoto('image','posts',$request);   //new image
+            Storage::delete($post->image);                //delete the old image
+        }
+        $post->update($data);
         return redirect()->route('posts.index');
     }
 
