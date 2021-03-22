@@ -18,4 +18,9 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function human_readable_date($date)
+    {
+        return \Carbon\Carbon::parse($date, 'd/m/Y H:i:s')->isoFormat('ddd  Do  \of MMMM YYYY, h:mm:ss a');
+    }
+
 }

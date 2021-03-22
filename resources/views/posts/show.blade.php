@@ -16,7 +16,7 @@
       <p class="card-text">{{ $post->user->name }}</p>
       <p class="card-text">{{ $post->user->email }}</p>
       <h5 class="card-title">Created at:</h5>
-      <p class="card-text">{{ $post->created_at}}</p>
+      <p class="card-text">{{ $post->human_readable_date($post->created_at)}}</p>
     </div>
 </div>
 @endsection
