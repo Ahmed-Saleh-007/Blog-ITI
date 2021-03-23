@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,15 +25,21 @@ class PostRequest extends FormRequest
      */
     public function rules()
     {
-        $rules =  [
-            'description'   => 'required|min:10',
-            'image'         => 'sometimes|nullable|image|mimes:jpg,jpeg,png',
-            'user_id'       => 'required|exists:users,id',
+        define('MAX_POSTS_ALLOWED', 10);
+
+        $rules = [
+            "description"   => ["required", "min:10"],
+            'image'         => ['sometimes', 'nullable', 'image', 'mimes:jpg,jpeg,png'],
+            "user_id"       => ["required", "exists:users,id",function($attribute, $value, $fail) {
+                if (Post::where($attribute, $value)->count() >= MAX_POSTS_ALLOWED && !$this->id)
+                    $fail('User has Exceeded max post which are ' . MAX_POSTS_ALLOWED);
+            }],
         ];
+
         if ($this->getMethod() == 'POST') {
-            $rules += ['title'    => 'required|min:3|unique:posts'];
+            $rules += ['title'  => ["required", "min:3", "unique:posts"] ];
         }else {
-            $rules += ['title'    => 'required|min:3|unique:posts,title,'.$this->post->id];
+            $rules += ["title"  => ["required", "min:3", "unique:posts,title," . $this->post->id] ];
         }
 
         return $rules;
